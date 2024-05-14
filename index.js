@@ -12,7 +12,7 @@ import interactivityRoutes from './routes/interactivityRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import commandRoutes from './routes/commandRoutes.js';
 
-// const __filename = fileURLToPath(import.meta.url);
+const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
@@ -26,11 +26,13 @@ app.use('/slack', interactivityRoutes);
 app.use('/api', userRoutes);
 app.use('/slack', commandRoutes);
 
-// app.use(express.static(path.join(__dirname, '../frontend/build')));
-
+// Endpoint to display "Hello"
 app.get('/', (req, res) => {
-    res.send('Hello');
-  });
+  res.send('Hello');
+});
+
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, '../frontend/build')));
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/build/index.html'));
@@ -39,4 +41,5 @@ app.get('*', (req, res) => {
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
+  console.log('Environment variables:', process.env);
 });
