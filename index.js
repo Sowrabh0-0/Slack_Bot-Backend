@@ -20,21 +20,18 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
-console.log('Environment Variables:', {
-  SLACK_ACCESS_TOKEN: process.env.SLACK_ACCESS_TOKEN,
-  SLACK_SIGNING_SECRET: process.env.SLACK_SIGNING_SECRET
-});
-
 app.use('/slack', authRoutes);
 app.use('/api', approvalRoutes);
 app.use('/slack', interactivityRoutes);
 app.use('/api', userRoutes);
 app.use('/slack', commandRoutes);
 
-app.get('/hello', (req, res) => {
+// Endpoint to display "Hello"
+app.get('/', (req, res) => {
   res.send('Hello');
 });
 
+// Serve static files from the React app
 app.use(express.static(path.join(__dirname, '../frontend/build')));
 
 app.get('*', (req, res) => {
@@ -44,4 +41,5 @@ app.get('*', (req, res) => {
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
+  console.log('Environment variables:', process.env);
 });
