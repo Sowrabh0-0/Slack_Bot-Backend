@@ -12,7 +12,7 @@ import interactivityRoutes from './routes/interactivityRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import commandRoutes from './routes/commandRoutes.js';
 
-const __filename = fileURLToPath(import.meta.url);
+// const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
