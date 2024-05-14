@@ -1,16 +1,17 @@
 import axios from 'axios';
-import slackApp from '../app.js';
 
 export const getUserInfo = async (req, res) => {
+  const accessToken = process.env.SLACK_ACCESS_TOKEN;
+
   try {
     const userInfoResponse = await axios.get('https://slack.com/api/users.profile.get', {
-      headers: { Authorization: `Bearer ${slackApp.token}` }
+      headers: { Authorization: `Bearer ${accessToken}` }
     });
 
     console.log('User info response:', userInfoResponse.data);
 
     const workspaceInfoResponse = await axios.get('https://slack.com/api/team.info', {
-      headers: { Authorization: `Bearer ${slackApp.token}` }
+      headers: { Authorization: `Bearer ${accessToken}` }
     });
 
     console.log('Workspace info response:', workspaceInfoResponse.data);
