@@ -18,7 +18,7 @@ export const oauthRedirect = async (req, res) => {
       const accessToken = response.data.access_token;
       slackApp.token = accessToken;
 
-      res.send('<h1>Thanks for installing the Approval Buddy app!</h1><p>You can now use the app in your Slack workspace.</p><a href="http://localhost:3000/approvalhistory">Go to Approval History</a>');
+    res.redirect(`${process.env.FRONTEND_URL}`)
     } else {
       res.status(500).send('Failed to install Slack app');
     }
