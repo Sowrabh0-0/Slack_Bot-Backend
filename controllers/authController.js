@@ -18,7 +18,7 @@ export const oauthRedirect = async (req, res) => {
       const accessToken = response.data.access_token;
       slackApp.token = accessToken;
 
-    res.redirect(`${process.env.FRONTEND_URL}`)
+      res.redirect(process.env.FRONTEND_URL);
     } else {
       res.status(500).send('Failed to install Slack app');
     }
