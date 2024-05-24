@@ -4,6 +4,8 @@ import { addApproval, updateApprovalStatus } from './approvalController.js';
 export const handleInteractivity = async (req, res) => {
     const payload = JSON.parse(req.body.payload);
 
+    console.log("Payload received:", JSON.stringify(payload, null, 2));
+
     // Check if the payload type is 'view_submission' and the callback ID is 'approval_modal'
     if (payload.type === 'view_submission' && payload.view.callback_id === 'approval_modal') {
         const approver = payload.view.state.values.approver_block.approver_select.selected_user;
