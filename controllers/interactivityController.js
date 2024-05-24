@@ -1,3 +1,6 @@
+import slackApp from '../app.js';
+import { addApproval, updateApprovalStatus } from './approvalController.js';
+
 export const handleInteractivity = async (req, res) => {
     const payload = JSON.parse(req.body.payload);
 
