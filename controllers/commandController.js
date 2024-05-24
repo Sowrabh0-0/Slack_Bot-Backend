@@ -1,4 +1,5 @@
 import slackApp from '../app.js';
+import axios from 'axios'; 
 
 export const handleCommand = async (req, res) => {
     const { command, user_id, response_url, trigger_id } = req.body;
@@ -38,7 +39,8 @@ export const handleCommand = async (req, res) => {
                             element: {
                                 type: 'plain_text_input',
                                 action_id: 'approval_text'
-                            }
+                            },
+                            optional: false
                         }
                     ],
                     submit: {
@@ -49,7 +51,12 @@ export const handleCommand = async (req, res) => {
             });
             res.send('');
         } catch (error) {
-            console.error('Error opening modal:', error);
+            console.error('Error opening modal:', error.response ? JSON.stringify(error.response.data) : error.message);
+            // Sending an error message back to the user via response_url
+            axios.post(response_url, {
+                response_type: 'ephemeral', // Only visible to the user
+                text: "Sorry, there was a problem opening the approval request."
+            });
             res.status(500).send('Internal Server Error');
         }
     } else {

@@ -9,6 +9,8 @@ export const handleInteractivity = async (req, res) => {
         const approver = payload.view.state.values.approver_block.approver_select.selected_user;
         const approvalText = payload.view.state.values.text_block.approval_text.value;
 
+        console.log("Approver ID:", approver);
+
         try {
             // Send a message to the approver
             await slackApp.client.chat.postMessage({
