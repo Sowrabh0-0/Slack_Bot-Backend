@@ -73,9 +73,14 @@ export const handleInteractivity = async (req, res) => {
         }
     } else if (payload.type === 'block_actions') {
         const action = payload.actions[0];
+
+        // Log the message text for debugging
+        console.log('Message text:', payload.message.text);
+
+        // Extract user ID using regex
         const userIdMatch = payload.message.text.match(/<@(.*?)>/);
         if (!userIdMatch || !userIdMatch[1]) {
-            console.error('Error extracting user ID from message text');
+            console.error('Error extracting user ID from message text:', payload.message.text);
             res.status(500).send('Error extracting user ID from message text');
             return;
         }
