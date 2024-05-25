@@ -4,27 +4,15 @@ import { addApproval, updateApprovalStatus } from './approvalController.js';
 export const handleInteractivity = async (req, res) => {
     const payload = JSON.parse(req.body.payload);
 
-    // Log the entire payload to debug
-    console.log("Payload received:", JSON.stringify(payload, null, 2));
-
+    // Check if the payload type is 'view_submission' and the callback ID is 'approval_modal'
     if (payload.type === 'view_submission' && payload.view.callback_id === 'approval_modal') {
         const approver = payload.view.state.values.approver_block.approver_select.selected_user;
         const approvalText = payload.view.state.values.text_block.approval_text.value;
 
-        // Log the Approver ID to debug
-        console.log("Approver ID:", approver);
-
         try {
-            // Open an IM channel with the approver if it doesn't exist
-            const imResponse = await slackApp.client.conversations.open({
-                users: approver
-            });
-
-            const channelId = imResponse.channel.id;
-
             // Send a message to the approver
             await slackApp.client.chat.postMessage({
-                channel: channelId,
+                channel: approver,
                 text: `Approval Request from <@${payload.user.id}>: ${approvalText}`,
                 blocks: [
                     {
