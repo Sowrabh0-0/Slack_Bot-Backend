@@ -1,5 +1,6 @@
 import slackApp from '../app.js';
 import { addApproval, updateApprovalStatus } from './approvalController.js';
+import moment from 'moment-timezone';
 
 export const handleInteractivity = async (req, res) => {
     const payload = JSON.parse(req.body.payload);
@@ -17,6 +18,9 @@ export const handleInteractivity = async (req, res) => {
             // Fetch the approver's information
             const approverInfoResponse = await slackApp.client.users.info({ user: approverId });
             const approverName = approverInfoResponse.user.profile.display_name || approverInfoResponse.user.real_name;
+
+            // Get current date and time in IST
+            const currentDateTime = moment().tz("Asia/Kolkata").format('M/D/YYYY, h:mm:ss A');
 
             // Send a message to the approver
             await slackApp.client.chat.postMessage({
@@ -60,7 +64,7 @@ export const handleInteractivity = async (req, res) => {
 
             // Add the approval to the database
             addApproval({
-                requestDate: new Date().toLocaleString(),
+                requestDate: currentDateTime,
                 status: 'Pending',
                 approvedOn: '',
                 message: approvalText,
