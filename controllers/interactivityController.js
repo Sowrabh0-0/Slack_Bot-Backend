@@ -73,31 +73,25 @@ export const handleInteractivity = async (req, res) => {
         }
     } else if (payload.type === 'block_actions') {
         const action = payload.actions[0];
-
-        // Log the message text for debugging
-        console.log('Message text:', payload.message.text);
-
-        // Extract user ID using regex
-        const userIdMatch = payload.message.text.match(/<@(.*?)>/);
-        if (!userIdMatch || !userIdMatch[1]) {
-            console.error('Error extracting user ID from message text:', payload.message.text);
-            res.status(500).send('Error extracting user ID from message text');
-            return;
-        }
-        const requesterId = userIdMatch[1];
         const actionText = action.value === 'approve' ? 'approved' : 'rejected';
 
-        try {
-            // Fetch the requester's information
-            const requesterInfoResponse = await slackApp.client.users.info({ user: requesterId });
-            const requesterName = requesterInfoResponse.user.profile.display_name || requesterInfoResponse.user.real_name;
+        // Extract requester name from the message text
+        const messageText = payload.message.text;
+        const requesterNameMatch = messageText.match(/Approval Request from (.*?):/);
+        if (!requesterNameMatch || !requesterNameMatch[1]) {
+            console.error('Error extracting requester name from message text:', messageText);
+            res.status(500).send('Error extracting requester name from message text');
+            return;
+        }
+        const requesterName = requesterNameMatch[1];
 
+        try {
             // Fetch the action performer's information
             const performerInfoResponse = await slackApp.client.users.info({ user: payload.user.id });
             const performerName = performerInfoResponse.user.profile.display_name || performerInfoResponse.user.real_name;
 
             // Check if the requester is the same as the user who performed the action
-            if (requesterId === payload.user.id) {
+            if (requesterName === performerName) {
                 await slackApp.client.chat.postMessage({
                     channel: payload.channel.id,
                     text: `You cannot ${actionText} your own request.`,
@@ -130,7 +124,7 @@ export const handleInteractivity = async (req, res) => {
 
                 // Send a message to the requester
                 await slackApp.client.chat.postMessage({
-                    channel: requesterId,
+                    channel: payload.user.id,
                     text: `Your approval request has been ${actionText} by ${performerName}.`
                 });
 
