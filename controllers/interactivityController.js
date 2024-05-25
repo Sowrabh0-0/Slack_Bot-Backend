@@ -68,8 +68,8 @@ export const handleInteractivity = async (req, res) => {
                 status: 'Pending',
                 approvedOn: '',
                 message: approvalText,
-                requestedBy: requesterName, // Use name instead of ID
-                approvedBy: approverName // Use name instead of ID
+                requestedBy: requesterName, 
+                approvedBy: approverName 
             });
 
         } catch (error) {

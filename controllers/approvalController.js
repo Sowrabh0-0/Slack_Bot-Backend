@@ -1,3 +1,5 @@
+import moment from 'moment-timezone';
+
 let io;
 
 export const initSocket = (socketIo) => {
@@ -33,7 +35,7 @@ export const updateApprovalStatus = (requestedBy, message, status) => {
     if (approval) {
         // Update the status and approvedOn date of the approval
         approval.status = status.charAt(0).toUpperCase() + status.slice(1);
-        approval.approvedOn = new Date().toLocaleString();
+        approval.approvedOn = moment().tz("Asia/Kolkata").format('M/D/YYYY, h:mm:ss A');
         if (io) {
             io.emit('updateApproval', approval); // Emit event to all connected clients
         }
