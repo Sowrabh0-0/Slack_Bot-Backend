@@ -73,7 +73,13 @@ export const handleInteractivity = async (req, res) => {
         }
     } else if (payload.type === 'block_actions') {
         const action = payload.actions[0];
-        const requesterId = payload.message.text.match(/<@(.*?)>/)[1];
+        const userIdMatch = payload.message.text.match(/<@(.*?)>/);
+        if (!userIdMatch || !userIdMatch[1]) {
+            console.error('Error extracting user ID from message text');
+            res.status(500).send('Error extracting user ID from message text');
+            return;
+        }
+        const requesterId = userIdMatch[1];
         const actionText = action.value === 'approve' ? 'approved' : 'rejected';
 
         try {
